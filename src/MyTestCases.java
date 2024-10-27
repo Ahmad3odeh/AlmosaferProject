@@ -1,6 +1,7 @@
 import static org.testng.Assert.assertEquals;
 
 import java.sql.Driver;
+import java.time.LocalDate;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -9,6 +10,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import net.bytebuddy.build.Plugin.Factory.UsingReflection.Priority;
 
 public class MyTestCases {
 
@@ -44,7 +47,6 @@ public class MyTestCases {
 		String ActualCurrency = driver.findElement(By.xpath("//button[@data-testid='Header__CurrencySelector']"))
 				.getText();
 
-		
 		String ExpecttedCurrensy = "SAR";
 
 		Assert.assertEquals(ActualCurrency, ExpecttedCurrensy);
@@ -60,17 +62,44 @@ public class MyTestCases {
 		Assert.assertEquals(ActualNamber, ExpecttedNambur);
 
 	}
-	
+
 	@Test(priority = 4)
 
 	public void CheckQitafLogo() {
 
-		boolean ActualQitafLogo = driver.findElement(By.cssSelector(".sc-bdVaJa.bxRSiR.sc-ciodno.lkfeIG")).isDisplayed();
+		boolean ActualQitafLogo = driver.findElement(By.cssSelector(".sc-bdVaJa.bxRSiR.sc-ciodno.lkfeIG"))
+				.isDisplayed();
 		boolean ExpecttedQitafLogo = true;
-		
-		
+
 		Assert.assertEquals(ActualQitafLogo, ExpecttedQitafLogo);
 
 	}
 
+	@Test(priority = 5)
+	public void CheckHotelTabIsNotSelect() {
+
+		WebElement HotelTab = driver.findElement(By.id("uncontrolled-tab-example-tab-hotels"));
+
+		String ActualValue = HotelTab.getAttribute("aria-selected");
+		String ExpictedValue = "false";
+
+		Assert.assertEquals(ActualValue, ExpictedValue);
+
+	}
+
+	@Test(priority = 6)
+	public void CheckDepatureDate() {
+		int Today=LocalDate.now().getDayOfMonth();
+		int tomoro =LocalDate.now().plusDays(1).getDayOfMonth();
+		
+		driver.findElement(By.cssSelector("div[class='sc-OxbzP sc-lnrBVv gKbptE'] span[class='sc-fvLVrH hNjEjT']")).getTagName();
+		
+		
+		
+		
+		
+		
+		
+
+	}
 }
