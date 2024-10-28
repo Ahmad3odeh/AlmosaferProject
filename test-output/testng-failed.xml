@@ -6,8 +6,7 @@
       <class name="MyTestCases">
         <methods>
           <include name="MySetUp"/>
-          <include name="CheckPhoneNambur"/>
-          <include name="CheckQitafLogo"/>
+          <include name="CheckDepatureDate"/>
         </methods>
       </class> <!-- MyTestCases -->
     </classes>

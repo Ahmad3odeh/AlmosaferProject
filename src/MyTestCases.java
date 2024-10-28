@@ -2,6 +2,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.sql.Driver;
 import java.time.LocalDate;
+import java.util.Random;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -18,6 +19,7 @@ public class MyTestCases {
 	WebDriver driver = new ChromeDriver();
 
 	String MyWebSiteUrl = "https://www.almosafer.com/en";
+	Random rand = new Random();
 
 	@BeforeTest
 	public void MySetUp() {
@@ -89,17 +91,56 @@ public class MyTestCases {
 
 	@Test(priority = 6)
 	public void CheckDepatureDate() {
-		int Today=LocalDate.now().getDayOfMonth();
-		int tomoro =LocalDate.now().plusDays(1).getDayOfMonth();
-		
-		driver.findElement(By.cssSelector("div[class='sc-OxbzP sc-lnrBVv gKbptE'] span[class='sc-fvLVrH hNjEjT']")).getTagName();
-		
-		
-		
-		
-		
-		
-		
+		int Today = LocalDate.now().getDayOfMonth();
+		int tomorrow = LocalDate.now().plusDays(1).getDayOfMonth();
+		int Dayaftertomorrow = LocalDate.now().plusDays(2).getDayOfMonth();
 
+		String ActualDepature = driver
+				.findElement(By.cssSelector("div[class='sc-OxbzP sc-lnrBVv gKbptE'] span[class='sc-fvLVrH hNjEjT']"))
+				.getText();
+		String ExpictedDepature = Integer.toString(tomorrow);
+
+		Assert.assertEquals(ActualDepature, ExpictedDepature);
+
+	}
+
+	@Test(priority = 7)
+	public void CheckReturnDate() {
+
+		int DayAfterTomorrow = LocalDate.now().plusDays(2).getDayOfMonth();
+
+		String ActualReturnDate = driver
+				.findElement(By.cssSelector("div[class='sc-OxbzP sc-bYnzgO bojUIa'] span[class='sc-fvLVrH hNjEjT']"))
+				.getText();
+		String ExpictedReturnDate = Integer.toString(DayAfterTomorrow);
+
+		Assert.assertEquals(ActualReturnDate, ExpictedReturnDate);
+
+	}
+
+	@Test(priority = 8)
+	public void RandomlyChangeLanguage() throws InterruptedException {
+
+		String[] MyWebSites = { "https://www.almosafer.com/en", "https://www.almosafer.com/ar" };
+
+		int RandomIndex = rand.nextInt(MyWebSites.length);
+
+		driver.get(MyWebSites[RandomIndex]);
+
+		if (driver.getCurrentUrl().contains("en")) {
+			String ActualLanguage = driver.findElement(By.tagName("html")).getAttribute("lang");
+			String ExpecttedLanguage = "en";
+
+			Assert.assertEquals(ActualLanguage, ExpecttedLanguage);
+		} else {
+
+			
+				String ActualLanguage = driver.findElement(By.tagName("html")).getAttribute("lang");
+				String ExpecttedLanguage = "ar";
+
+				Assert.assertEquals(ActualLanguage, ExpecttedLanguage);
+
+		
+		}
 	}
 }
