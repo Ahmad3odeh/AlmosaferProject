@@ -1,11 +1,14 @@
-import static org.testng.Assert.assertEquals;
-
-import java.sql.Driver;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,46 +17,33 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import net.bytebuddy.build.Plugin.Factory.UsingReflection.Priority;
-
-public class MyTestCases {
-
-	WebDriver driver = new ChromeDriver();
-
-	String MyWebSiteUrl = "https://www.almosafer.com/en";
-	Random rand = new Random();
+public class MyTestCases extends Parameters {
 
 	@BeforeTest
 	public void MySetUp() {
 
-		driver.manage().window().maximize();
-		driver.get(MyWebSiteUrl);
-
-		WebElement ButtunForTheCurrency = driver
-				.findElement(By.cssSelector(".sc-jTzLTM.hQpNle.cta__button.cta__saudi.btn.btn-primary"));
-
-		ButtunForTheCurrency.click();
-
+		MySetupToEnterWebsite();
 	}
 
 	@Test(priority = 1, enabled = true)
-	public void CheckTheEnglishLanguageIsDefault() {
+	public void CheckTheEnglishLanguageIsDefault() throws IOException, InterruptedException {
 
 		String ActualLanguage = driver.findElement(By.tagName("html")).getAttribute("lang");
-		String ExpecttedLanguage = "en";
 
 		Assert.assertEquals(ActualLanguage, ExpecttedLanguage);
+
+		ScreenShoot();
+
 	}
 
 	@Test(priority = 2, enabled = true)
-	public void CheckTheDefaultCurrensyIsSAR() {
+	public void CheckTheDefaultCurrensyIsSAR() throws IOException, InterruptedException {
 
 		String ActualCurrency = driver.findElement(By.xpath("//button[@data-testid='Header__CurrencySelector']"))
 				.getText();
 
-		String ExpecttedCurrensy = "SAR";
-
 		Assert.assertEquals(ActualCurrency, ExpecttedCurrensy);
+		ScreenShoot();
 
 	}
 
@@ -62,7 +52,7 @@ public class MyTestCases {
 	public void CheckPhoneNambur() {
 
 		String ActualNamber = driver.findElement(By.cssSelector(".sc-hUfwpO.bWcsTG")).getText();
-		String ExpecttedNambur = "+966554400000";
+
 		Assert.assertEquals(ActualNamber, ExpecttedNambur);
 
 	}
@@ -73,7 +63,6 @@ public class MyTestCases {
 
 		boolean ActualQitafLogo = driver.findElement(By.cssSelector(".sc-bdVaJa.bxRSiR.sc-ciodno.lkfeIG"))
 				.isDisplayed();
-		boolean ExpecttedQitafLogo = true;
 
 		Assert.assertEquals(ActualQitafLogo, ExpecttedQitafLogo);
 
@@ -85,22 +74,17 @@ public class MyTestCases {
 		WebElement HotelTab = driver.findElement(By.id("uncontrolled-tab-example-tab-hotels"));
 
 		String ActualValue = HotelTab.getAttribute("aria-selected");
-		String ExpictedValue = "false";
 
-		Assert.assertEquals(ActualValue, ExpictedValue);
+		Assert.assertEquals(ActualValue, ExpictedHotelTabIsNotSelect);
 
 	}
 
 	@Test(priority = 6, enabled = true)
 	public void CheckDepatureDate() {
-		int Today = LocalDate.now().getDayOfMonth();
-		int tomorrow = LocalDate.now().plusDays(1).getDayOfMonth();
-		int Dayaftertomorrow = LocalDate.now().plusDays(2).getDayOfMonth();
 
 		String ActualDepature = driver
 				.findElement(By.cssSelector("div[class='sc-OxbzP sc-lnrBVv gKbptE'] span[class='sc-fvLVrH hNjEjT']"))
 				.getText();
-		String ExpictedDepature = Integer.toString(tomorrow);
 
 		Assert.assertEquals(ActualDepature, ExpictedDepature);
 
@@ -109,12 +93,9 @@ public class MyTestCases {
 	@Test(priority = 7, enabled = true)
 	public void CheckReturnDate() {
 
-		int DayAfterTomorrow = LocalDate.now().plusDays(2).getDayOfMonth();
-
 		String ActualReturnDate = driver
 				.findElement(By.cssSelector("div[class='sc-OxbzP sc-bYnzgO bojUIa'] span[class='sc-fvLVrH hNjEjT']"))
 				.getText();
-		String ExpictedReturnDate = Integer.toString(DayAfterTomorrow);
 
 		Assert.assertEquals(ActualReturnDate, ExpictedReturnDate);
 
@@ -122,16 +103,6 @@ public class MyTestCases {
 
 	@Test(priority = 8, enabled = true)
 	public void RandomlyChangeLanguage() throws InterruptedException {
-
-		String[] EnglishCitiesNames = { "jeddah", "riyadh", "dubai" };
-		String[] ArabicCitiesNames = { "دبي", "جدة" };
-
-		int randomArabicCity = rand.nextInt(ArabicCitiesNames.length);
-		int randomEnglishCity = rand.nextInt(EnglishCitiesNames.length);
-
-		String[] myWebsites = { "https://www.almosafer.com/ar", "https://www.almosafer.com/en" };
-
-		int randomIndex = rand.nextInt(myWebsites.length);
 
 		driver.get(myWebsites[randomIndex]);
 
@@ -141,21 +112,9 @@ public class MyTestCases {
 
 		WebElement HotelSearchBar = driver.findElement(By.cssSelector(".sc-phbroq-2.uQFRS.AutoComplete__Input"));
 
-		if (driver.getCurrentUrl().equals("https://www.almosafer.com/ar")) {
-			String ActualLaguage = driver.findElement(By.tagName("html")).getAttribute("lang");
-			String ExpectedLanguage = "ar";
+		CheckTheWebSiteToEnterCityName(HotelSearchBar);
+		
 
-			Assert.assertEquals(ActualLaguage, ExpectedLanguage);
-			HotelSearchBar.sendKeys(ArabicCitiesNames[randomArabicCity]);
-		} else {
-			String ActualLaguage = driver.findElement(By.tagName("html")).getAttribute("lang");
-			String ExpectedLanguage = "en";
-
-			Assert.assertEquals(ActualLaguage, ExpectedLanguage);
-			HotelSearchBar.sendKeys(EnglishCitiesNames[randomEnglishCity]);
-
-		}
-		Thread.sleep(2000);
 		WebElement CitiesList = driver.findElement(By.cssSelector(".sc-phbroq-4.gGwzVo.AutoComplete__List"));
 		WebElement SelectNamberOfVistor = driver.findElement(By.cssSelector(".sc-tln3e3-1.gvrkTi"));
 		CitiesList.findElements(By.tagName("li")).get(1).click();
@@ -168,7 +127,7 @@ public class MyTestCases {
 		WebElement SearchButton = driver.findElement(By.xpath("//button[@data-testid='HotelSearchBox__SearchButton']"));
 		SearchButton.click();
 
-		Thread.sleep(60000);
+		Thread.sleep(45000);
 
 	}
 
@@ -187,8 +146,7 @@ public class MyTestCases {
 	@Test(priority = 10, enabled = true)
 	public void CheckTheSortOption() throws InterruptedException {
 
-		
-		Thread.sleep(130000);
+		Thread.sleep(45000);
 
 		WebElement CheckTheSortOption = driver.findElement(By.xpath("//div[@data-testid='srp_sort_LOWEST_PRICE']"));
 		CheckTheSortOption.click();
@@ -214,7 +172,6 @@ public class MyTestCases {
 			int lowestPrice = Integer.parseInt(PriceList.get(0).getText().replace("ر.س. ", ""));
 			System.out.println();
 			int HighestPrice = Integer.parseInt(PriceList.get(PriceList.size() - 1).getText().replace("ر.س. ", ""));
-			
 
 			boolean ActualValue = lowestPrice < HighestPrice;
 			boolean ExpectedValue = true;

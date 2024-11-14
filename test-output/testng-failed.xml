@@ -7,6 +7,15 @@
         <methods>
           <include name="MySetUp"/>
           <include name="CheckTheSortOption"/>
+          <include name="CheckDepatureDate"/>
+          <include name="CheckHotelTabIsNotSelect"/>
+          <include name="CheckTheDefaultCurrensyIsSAR"/>
+          <include name="CheckPhoneNambur"/>
+          <include name="CheckQitafLogo"/>
+          <include name="CheckThatThePageIsFullyLoaded"/>
+          <include name="CheckTheEnglishLanguageIsDefault"/>
+          <include name="CheckReturnDate"/>
+          <include name="RandomlyChangeLanguage"/>
         </methods>
       </class> <!-- MyTestCases -->
     </classes>
